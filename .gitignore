@@ -1,0 +1,71 @@
+# Build artifacts
+*.wasm
+*.so
+*.o
+*.a
+*.dylib
+*.dll
+
+# Generated files
+src/parser.c
+src/tree_sitter/
+src/grammar.json
+src/node-types.json
+
+# Dependencies
+node_modules/
+target/
+build/
+dist/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime files
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Temporary files
+tmp/
+temp/
+
+# Editor backups
+*~
+*.bak
+
+# Neovim
+.nvimrc
+.nvim/
+
+# Local configuration
+.env
+.env.local
+.env.*.local
+
+# Package manager files
+package-lock.json
+yarn.lock
+Cargo.lock
+
+# Build directories
+__pycache__/
+*.py[cod]
+*$py.class

@@ -1,0 +1,5 @@
+name = "Pluto"
+grammar = "pluto"
+file_extensions = ["pluto"]
+line_comments = ["#"]
+

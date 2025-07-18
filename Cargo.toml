@@ -1,0 +1,14 @@
+[package]
+name = "zed-pluto"
+version = "0.1.0"
+edition = "2021"
+authors = ["Shaurya Gaur <shauryagaur07@gmail.com>"]
+description = "Zed extension for Pluto language support"
+license = "MIT"
+
+[lib]
+path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+zed_extension_api = "0.6.0"

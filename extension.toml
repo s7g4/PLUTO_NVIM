@@ -1,0 +1,21 @@
+id = "pluto"
+name = "Pluto Language Support"
+version = "0.1.0"
+schema_version = 1
+authors = ["s7g4"]
+description = "A lightweight, expressive syntax for scripting with full syntax highlighting and parsing support for Neovim using Tree-sitter"
+repository = "https://github.com/s7g4/pluto-neovim"
+
+[language]
+id = "pluto"
+scope = "source.pluto"
+file_extensions = ["pluto"]
+highlights = "languages/pluto/tree-sitter-pluto/queries/highlights.scm"
+folds = "languages/pluto/tree-sitter-pluto/queries/fold.scm"
+injections = "languages/pluto/tree-sitter-pluto/queries/injections.scm"
+
+[extension]
+rust_crate = "pluto-neovim"
+
+# Note: This configuration is now primarily for Neovim with tree-sitter
+# For installation instructions, see NEOVIM_SETUP.md
