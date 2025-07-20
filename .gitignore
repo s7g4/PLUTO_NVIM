@@ -1,5 +1,6 @@
 # Build artifacts
 *.wasm
+!extension.wasm
 *.so
 *.o
 *.a
@@ -21,6 +22,10 @@ dist/
 # IDE files
 .vscode/
 .idea/
+.ropeproject/
+.zencoder/
+wasm/
+wasm~/
 *.swp
 *.swo
 *~
