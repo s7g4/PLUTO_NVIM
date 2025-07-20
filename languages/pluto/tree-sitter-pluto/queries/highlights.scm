@@ -1,72 +1,59 @@
-; Keywords and Operators
-[
-  "="
-] @keyword.operator
+; Comments
+(comment) @comment
+(block_comment) @comment
 
-; Arithmetic Operators
+; Keywords - only using string literals that exist in our grammar
+"if" @keyword.control
+"else" @keyword.control
+"while" @keyword.control
+"for" @keyword.control
+"function" @keyword.function
+"in" @keyword
+
+; Operators
 (operator) @operator
 
-; Parentheses and Brackets
+; Assignment operator
+"=" @operator
+
+; Punctuation
 [
   "("
   ")"
+  "["
+  "]"
+  "{"
+  "}"
+  ","
+  ":"
+  "?"
 ] @punctuation.bracket
 
-; Data Types with better specificity
+; Literals
 (string) @string
 (number) @number
 (boolean) @constant.builtin
-(comment) @comment
 
-; Variables with context awareness
+; Identifiers
 (identifier) @variable
 
-; Function Calls with distinction
+; Function calls
 (command
   name: (identifier) @function.call)
 
-; Assignment with parameter highlighting
+; Function definitions
+(function_definition
+  name: (identifier) @function)
+
+; Assignment targets
 (assignment
-  left: (identifier) @variable.parameter)
+  left: (identifier) @variable)
 
-; Multiple assignment targets
-(assignment
-  left: (identifier) @variable.parameter
-  left: (identifier) @variable.parameter)
+; Array and object literals
+(array_literal) @punctuation.bracket
+(object_literal) @punctuation.bracket
 
-; Binary operations with operator highlighting
-(binary_operation
-  left: (_) @variable
-  operator: _ @operator
-  right: (_) @variable)
+; Built-in constants are handled by the boolean token above
 
-; Unary operations
-(unary_operation
-  operator: _ @operator
-  argument: (_) @variable)
-
-; Enhanced command arguments with type-specific highlighting
-(argument_list
-  (identifier) @variable.argument
-  (string) @string.special
-  (number) @number.special
-  (boolean) @constant.builtin.boolean)
-
-; Nested expressions in parentheses
-(parenthesized_expression 
-  "(" @punctuation.bracket 
-  ")" @punctuation.bracket)
-
-; Specific command types for better semantic highlighting
-(command
-  name: (identifier) @function.builtin
-  (#match? @function.builtin "^(print|echo|run|exec|exit|quit|help)$"))
-
-; Assignment operators
-(assignment "=" @operator.assignment)
-
-; Special handling for built-in values
-(boolean) @constant.builtin
-
-; Error handling for malformed expressions
+; Error nodes
 (ERROR) @error

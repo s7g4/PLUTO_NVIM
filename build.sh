@@ -1,9 +1,16 @@
 #!/bin/bash
 
-# Build script for Pluto Language Extension
+# Build script for Zed Pluto Extension
 set -e
 
-echo "🔨 Building Pluto Language Extension for Zed..."
+echo "🚀 Building Zed Pluto Extension..."
+
+# Check if Rust is installed
+if ! command -v cargo &> /dev/null; then
+    echo "❌ Error: Rust/Cargo not found. Please install Rust first."
+    echo "Visit: https://rustup.rs/"
+    exit 1
+fi
 
 # Check if wasm32-wasip2 target is installed
 if ! rustup target list --installed | grep -q "wasm32-wasip2"; then
@@ -11,29 +18,41 @@ if ! rustup target list --installed | grep -q "wasm32-wasip2"; then
     rustup target add wasm32-wasip2
 fi
 
-# Build the extension
-echo "🏗️  Building Rust extension..."
+# Build the Tree-sitter grammar
+echo "🌳 Building Tree-sitter grammar..."
+cd languages/pluto/tree-sitter-pluto
+
+if command -v tree-sitter &> /dev/null; then
+    # Clean up any existing WASM files that might cause issues
+    rm -f *.wasm
+    tree-sitter generate
+    tree-sitter build
+else
+    echo "⚠️  Warning: tree-sitter CLI not found. Skipping grammar build."
+    echo "Install with: npm install -g tree-sitter-cli"
+fi
+
+cd ../../..
+
+# Build the Rust extension
+echo "🦀 Building Rust extension..."
 cargo build --target wasm32-wasip2 --release
 
-# Copy the built WASM file
+# Copy the WASM file to the correct location
 echo "📋 Copying WASM file..."
 cp target/wasm32-wasip2/release/zed_pluto.wasm extension.wasm
 
-# Verify the file exists and has content
-if [ -f "extension.wasm" ] && [ -s "extension.wasm" ]; then
-    SIZE=$(wc -c < extension.wasm)
-    echo "✅ Extension built successfully! (Size: $SIZE bytes)"
-else
-    echo "❌ Build failed - extension.wasm not found or empty"
-    exit 1
-fi
-
+echo "✅ Build complete!"
 echo ""
-echo "🎯 Build complete! You can now:"
-echo "1. Run './install.sh' to install the extension"
-echo "2. Or manually copy the extension directory to Zed's extensions folder"
+echo "📁 Extension files:"
+echo "   - extension.wasm (main extension)"
+echo "   - extension.toml (configuration)"
+echo "   - languages/pluto/ (language support)"
 echo ""
-echo "📁 Required files:"
-echo "   ✓ extension.toml"
-echo "   ✓ extension.wasm"
-echo "   ✓ languages/pluto/queries/*.scm"
+echo "🎯 To install in Zed:"
+echo "   1. Open Zed"
+echo "   2. Go to Extensions (Cmd/Ctrl + Shift + X)"
+echo "   3. Click 'Install Dev Extension'"
+echo "   4. Select this directory"
+echo ""
+echo "🧪 Test with: test.pluto"

@@ -12,7 +12,8 @@ impl zed::Extension for PlutoExtension {
         _language_server_id: &zed::LanguageServerId,
         _worktree: &zed::Worktree,
     ) -> Result<zed::Command> {
-        // Pluto doesn't have a language server yet
+        // Pluto doesn't have a language server yet, but we provide syntax highlighting
+        // through tree-sitter grammar
         Err("No language server available for Pluto".to_string())
     }
 }

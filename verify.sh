@@ -1,65 +1,85 @@
 #!/bin/bash
 
-# Verification script for Pluto Language Extension
-echo "🔍 Verifying Pluto Language Extension for Zed..."
-echo ""
+# Verification script for Zed Pluto Extension
+set -e
 
-# Check required files
-REQUIRED_FILES=(
+echo "🔍 Verifying Zed Pluto Extension..."
+
+# Check essential files exist
+echo "📁 Checking essential files..."
+files=(
     "extension.toml"
     "extension.wasm"
     "languages/pluto/config.toml"
     "languages/pluto/queries/highlights.scm"
-    "languages/pluto/queries/fold.scm"
-    "languages/pluto/queries/injections.scm"
+    "languages/pluto/tree-sitter-pluto/grammar.js"
+    "test.pluto"
 )
 
-ALL_GOOD=true
-
-for file in "${REQUIRED_FILES[@]}"; do
-    if [ -f "$file" ]; then
-        echo "✅ $file"
+for file in "${files[@]}"; do
+    if [[ -f "$file" ]]; then
+        echo "  ✅ $file"
     else
-        echo "❌ $file (missing)"
-        ALL_GOOD=false
+        echo "  ❌ $file (missing)"
+        exit 1
     fi
 done
 
-echo ""
-
-# Check WASM file size
-if [ -f "extension.wasm" ]; then
-    SIZE=$(wc -c < extension.wasm)
-    if [ "$SIZE" -gt 1000 ]; then
-        echo "✅ extension.wasm has valid size ($SIZE bytes)"
-    else
-        echo "⚠️  extension.wasm seems too small ($SIZE bytes)"
-        ALL_GOOD=false
-    fi
-fi
-
-# Check if test file exists
-if [ -f "test.pluto" ]; then
-    echo "✅ test.pluto file available for testing"
+# Check WASM file size (should be reasonable)
+wasm_size=$(stat -c%s "extension.wasm" 2>/dev/null || stat -f%z "extension.wasm" 2>/dev/null || echo "0")
+if [[ $wasm_size -gt 100000 ]]; then
+    echo "  ✅ extension.wasm ($wasm_size bytes)"
 else
-    echo "⚠️  test.pluto file not found (optional)"
+    echo "  ❌ extension.wasm too small ($wasm_size bytes)"
+    exit 1
+fi
+
+# Test Tree-sitter parser
+echo "🌳 Testing Tree-sitter parser..."
+cd languages/pluto/tree-sitter-pluto
+if tree-sitter parse ../../../test.pluto >/dev/null 2>&1; then
+    echo "  ✅ Parser works correctly"
+else
+    echo "  ❌ Parser failed"
+    exit 1
+fi
+
+# Test syntax highlighting queries
+echo "🎨 Testing syntax highlighting..."
+if tree-sitter query queries/highlights.scm test.pluto >/dev/null 2>&1; then
+    echo "  ✅ Highlighting queries work"
+else
+    echo "  ❌ Highlighting queries failed"
+    exit 1
+fi
+
+cd ../../..
+
+# Check extension configuration
+echo "⚙️  Checking extension configuration..."
+if grep -q '\[languages\.pluto\]' extension.toml; then
+    echo "  ✅ Language configuration present"
+else
+    echo "  ❌ Language configuration missing"
+    exit 1
+fi
+
+if grep -q '\[grammars\.pluto\]' extension.toml; then
+    echo "  ✅ Grammar configuration present"
+else
+    echo "  ❌ Grammar configuration missing"
+    exit 1
 fi
 
 echo ""
-
-if [ "$ALL_GOOD" = true ]; then
-    echo "🎉 All checks passed! Extension is ready for installation."
-    echo ""
-    echo "📋 Next steps:"
-    echo "1. Run './install.sh' to install the extension"
-    echo "2. Restart Zed editor"
-    echo "3. Open test.pluto to verify syntax highlighting"
-    echo ""
-    echo "🔧 Manual installation:"
-    echo "   Copy this entire directory to your Zed extensions folder:"
-    echo "   - macOS: ~/Library/Application Support/Zed/extensions/pluto"
-    echo "   - Linux: ~/.config/zed/extensions/pluto"
-    echo "   - Windows: %APPDATA%/Zed/extensions/pluto"
-else
-    echo "❌ Some issues found. Please run './build.sh' first."
-fi
+echo "🎉 All checks passed! Extension is ready for Zed."
+echo ""
+echo "📋 Installation Instructions:"
+echo "  1. Open Zed"
+echo "  2. Press Cmd/Ctrl + Shift + X"
+echo "  3. Click 'Install Dev Extension'"
+echo "  4. Select this directory: $(pwd)"
+echo "  5. Open a .pluto file to test highlighting"
+echo ""
+echo "🧪 Test file: test.pluto"
+echo "📚 Documentation: README.md"

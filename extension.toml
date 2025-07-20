@@ -7,4 +7,7 @@ description = "A lightweight, expressive syntax for scripting with full syntax h
 repository = "https://github.com/s7g4/zed-pluto"
 
 [grammars.pluto]
+repository = "https://github.com/s7g4/zed-pluto"
+rev = "main"
 path = "languages/pluto/tree-sitter-pluto"
+

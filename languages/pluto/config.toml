@@ -1,5 +1,10 @@
 name = "Pluto"
 grammar = "pluto"
-path_suffixes = ["pluto"]
+path_suffixes = ["pluto", "pl"]
 line_comments = ["# "]
-
+autoclose_before = ")]}:.,=; \t\n"
+brackets = [
+    { start = "{", end = "}", close = true, newline = true },
+    { start = "[", end = "]", close = true, newline = true },
+    { start = "(", end = ")", close = true, newline = true },
+]

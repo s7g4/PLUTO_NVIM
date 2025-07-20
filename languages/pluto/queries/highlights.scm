@@ -1,68 +1,59 @@
 ; Comments
 (comment) @comment
+(block_comment) @comment
 
-; Strings
-(string) @string
-(raw_string) @string
-(ansi_c_quoting) @string
-
-; Numbers
-(number) @number
-
-; Variables and identifiers
-(variable_name) @variable
-(word) @variable
-
-; Commands and function calls
-(command_name) @function
-(command) @function.call
+; Keywords - only using string literals that exist in our grammar
+"if" @keyword.control
+"else" @keyword.control
+"while" @keyword.control
+"for" @keyword.control
+"function" @keyword.function
+"in" @keyword
 
 ; Operators
+(operator) @operator
+
+; Assignment operator
 "=" @operator
-"+" @operator
-"-" @operator
-"*" @operator
-"/" @operator
-"%" @operator
-"==" @operator
-"!=" @operator
-"<" @operator
-">" @operator
-"<=" @operator
-">=" @operator
-"&&" @operator
-"||" @operator
-"!" @operator
-"&" @operator
-"|" @operator
-
-; Parentheses and brackets
-"(" @punctuation.bracket
-")" @punctuation.bracket
-"[" @punctuation.bracket
-"]" @punctuation.bracket
-"{" @punctuation.bracket
-"}" @punctuation.bracket
-
-; Special bash constructs that might apply to Pluto
-(expansion) @variable.special
-(command_substitution) @embedded
-
-; Keywords (if any match bash patterns)
-"if" @keyword
-"then" @keyword
-"else" @keyword
-"fi" @keyword
-"for" @keyword
-"while" @keyword
-"do" @keyword
-"done" @keyword
-"function" @keyword
 
 ; Punctuation
-";" @punctuation.delimiter
-"," @punctuation.delimiter
+[
+  "("
+  ")"
+  "["
+  "]"
+  "{"
+  "}"
+  ","
+  ":"
+  "?"
+] @punctuation.bracket
 
-; Boolean-like values
-"true" @constant.builtin
-"false" @constant.builtin
+; Literals
+(string) @string
+(number) @number
+(boolean) @constant.builtin
+
+; Identifiers
+(identifier) @variable
+
+; Function calls
+(command
+  name: (identifier) @function.call)
+
+; Function definitions
+(function_definition
+  name: (identifier) @function)
+
+; Assignment targets
+(assignment
+  left: (identifier) @variable)
+
+; Array and object literals
+(array_literal) @punctuation.bracket
+(object_literal) @punctuation.bracket
+
+; Built-in constants are handled by the boolean token above
+
+; Error nodes
+(ERROR) @error
