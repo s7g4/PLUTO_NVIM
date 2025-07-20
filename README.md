@@ -22,7 +22,7 @@ A Zed extension that provides syntax highlighting and language support for the P
 
 2. Build the extension:
    ```bash
-   ./build.sh
+   cargo build --release --target wasm32-wasi
    ```
 
 3. Install in Zed:
@@ -75,19 +75,10 @@ process_data (name + " v" + version) result status
 
 ### Requirements
 
-- Rust toolchain with `wasm32-wasip2` target
+- Rust toolchain with `wasm32-wasi` target
 - Tree-sitter CLI (optional, for grammar development)
 - Zed editor
 
-### Building
-
-```bash
-# Install required Rust target
-rustup target add wasm32-wasip2
-
-# Build the extension
-./build.sh
-```
 
 ### Project Structure
 
@@ -96,7 +87,6 @@ zed-pluto/
 ├── extension.toml              # Extension configuration
 ├── Cargo.toml                 # Rust project configuration
 ├── src/lib.rs                 # Extension implementation
-├── build.sh                   # Build script
 ├── languages/pluto/           # Language-specific files
 │   ├── config.toml            # Language configuration
 │   ├── queries/               # Tree-sitter queries
@@ -106,6 +96,11 @@ zed-pluto/
 │   └── tree-sitter-pluto/     # Tree-sitter grammar
 └── test.pluto                 # Example Pluto file
 ```
+
+## Notes
+
+- Pluto language support currently does **not** include a language server.
+- Syntax highlighting and language features are provided solely through Tree-sitter grammar integration.
 
 ## Contributing
 
@@ -132,7 +127,7 @@ MIT License
 - Try reinstalling the extension
 
 ### Build Issues
-- Ensure you have the `wasm32-wasip2` Rust target installed
+- Ensure you have the `wasm32-wasi` Rust target installed
 - Check that Tree-sitter CLI is installed if modifying grammar
 - Verify you're using a compatible Rust version
 
