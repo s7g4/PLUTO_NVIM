@@ -1,5 +1,0 @@
-# Simple Pluto test
-name = "test"
-version = 1.0
-print "Hello World"
-result = 10 + 20

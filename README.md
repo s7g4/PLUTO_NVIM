@@ -6,44 +6,34 @@ A Zed extension that provides syntax highlighting and language support for the P
 
 - **Syntax Highlighting**: Full syntax highlighting for Pluto language constructs
 - **Tree-sitter Integration**: Uses Tree-sitter for accurate parsing and highlighting
-- **Language Recognition**: Automatic detection of `.pluto` files
+- **Language Recognition**: Automatic detection of `.pluto` and `.pl` files
 - **Code Folding**: Support for folding comments, expressions, and complex structures
 - **Language Injections**: Support for embedded languages (JSON, YAML, SQL, etc.)
 
 ## Installation
 
-### Method 1: Local Development Installation
+### Development Installation
 
 1. Clone this repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/s7g4/zed-pluto.git
    cd zed-pluto
    ```
 
 2. Build the extension:
    ```bash
-   cargo build --target wasm32-wasip2 --release
-   cp target/wasm32-wasip2/release/zed_pluto.wasm extension.wasm
+   ./build.sh
    ```
 
-3. Install the extension in Zed:
+3. Install in Zed:
    - Open Zed
    - Go to Extensions (Cmd/Ctrl + Shift + X)
    - Click "Install Dev Extension"
    - Select this directory
 
-### Method 2: Manual Installation
-
-1. Copy the entire extension directory to your Zed extensions folder:
-   - **macOS**: `~/Library/Application Support/Zed/extensions/`
-   - **Linux**: `~/.config/zed/extensions/`
-   - **Windows**: `%APPDATA%\Zed\extensions\`
-
-2. Restart Zed
-
 ## Usage
 
-Once installed, the extension will automatically provide syntax highlighting for any file with the `.pluto` extension.
+Once installed, the extension will automatically provide syntax highlighting for files with `.pluto` or `.pl` extensions.
 
 ### Example Pluto Code
 
@@ -66,13 +56,16 @@ status = is_active ? "running" : "stopped"
 
 # Function calls
 process_data (name + " v" + version) result status
+
+/* Block comments
+   are also supported */
 ```
 
 ## Language Features Supported
 
 - **Variables**: Identifier highlighting and assignment operators
 - **Data Types**: Strings, numbers, booleans with appropriate highlighting
-- **Comments**: Line comments starting with `#`
+- **Comments**: Line comments (`#`) and block comments (`/* */`)
 - **Commands**: Function calls and built-in commands
 - **Operators**: Arithmetic, comparison, and logical operators
 - **Expressions**: Parenthesized expressions and complex operations
@@ -80,38 +73,38 @@ process_data (name + " v" + version) result status
 
 ## Development
 
-### Building from Source
+### Requirements
 
-Requirements:
 - Rust toolchain with `wasm32-wasip2` target
+- Tree-sitter CLI (optional, for grammar development)
 - Zed editor
 
+### Building
+
 ```bash
-# Add the WebAssembly target
+# Install required Rust target
 rustup target add wasm32-wasip2
 
 # Build the extension
-cargo build --target wasm32-wasip2 --release
-
-# Copy the built WASM file
-cp target/wasm32-wasip2/release/zed_pluto.wasm extension.wasm
+./build.sh
 ```
 
 ### Project Structure
 
 ```
 zed-pluto/
-├── extension.toml          # Extension configuration
-├── Cargo.toml             # Rust project configuration
-├── src/lib.rs             # Extension implementation
-├── languages/pluto/       # Language-specific files
-│   ├── config.toml        # Language configuration
-│   ├── queries/           # Tree-sitter queries
-│   │   ├── highlights.scm # Syntax highlighting rules
-│   │   ├── fold.scm       # Code folding rules
-│   │   └── injections.scm # Language injection rules
-│   └── tree-sitter-pluto/ # Tree-sitter grammar
-└── test.pluto             # Example Pluto file
+├── extension.toml              # Extension configuration
+├── Cargo.toml                 # Rust project configuration
+├── src/lib.rs                 # Extension implementation
+├── build.sh                   # Build script
+├── languages/pluto/           # Language-specific files
+│   ├── config.toml            # Language configuration
+│   ├── queries/               # Tree-sitter queries
+│   │   ├── highlights.scm     # Syntax highlighting rules
+│   │   ├── fold.scm           # Code folding rules
+│   │   └── injections.scm     # Language injection rules
+│   └── tree-sitter-pluto/     # Tree-sitter grammar
+└── test.pluto                 # Example Pluto file
 ```
 
 ## Contributing
@@ -119,26 +112,28 @@ zed-pluto/
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test with the provided `test.pluto` file
+4. Test with the provided example files
 5. Submit a pull request
 
 ## License
 
-MIT License - see LICENSE file for details.
+MIT License
 
 ## Troubleshooting
 
 ### Extension Not Loading
-- Ensure the `extension.wasm` file exists in the root directory
+- Ensure the build completed successfully
 - Check that Zed has been restarted after installation
 - Verify the extension appears in Zed's Extensions panel
 
 ### Syntax Highlighting Not Working
-- Confirm the file has a `.pluto` extension
-- Check that the Tree-sitter queries are properly formatted
-- Look for errors in Zed's developer console
+- Confirm the file has a `.pluto` or `.pl` extension
+- Check Zed's developer console for errors
+- Try reinstalling the extension
 
-### Building Issues
+### Build Issues
 - Ensure you have the `wasm32-wasip2` Rust target installed
-- Check that all dependencies in `Cargo.toml` are available
+- Check that Tree-sitter CLI is installed if modifying grammar
 - Verify you're using a compatible Rust version
+
+For more help, please open an issue on GitHub.
